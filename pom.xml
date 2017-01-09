@@ -60,7 +60,7 @@
         <compiler.version>1.7</compiler.version>
         
         <allure.version>1.4.15</allure.version>
-        <cucumberjvm.version>1.2.4</cucumberjvm.version>
+        <cucumberjvm.version>1.2.5</cucumberjvm.version>
         <aspectj.version>1.8.4</aspectj.version>
     </properties>
     <dependencies>
@@ -136,7 +136,7 @@
                     </includes>
                     <testFailureIgnore>false</testFailureIgnore>
                     <argLine>
-                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar -Dcucumber.options="--junit,--allow-started-ignored"
                     </argLine>
                     <properties>
                         <property>
