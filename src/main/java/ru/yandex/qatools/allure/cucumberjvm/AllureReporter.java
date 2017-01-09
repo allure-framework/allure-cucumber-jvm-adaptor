@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import gherkin.I18n;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,24 +37,14 @@ import ru.yandex.qatools.allure.annotations.Severity;
 import ru.yandex.qatools.allure.annotations.Stories;
 import ru.yandex.qatools.allure.annotations.TestCaseId;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
-import ru.yandex.qatools.allure.events.MakeAttachmentEvent;
-import ru.yandex.qatools.allure.events.StepCanceledEvent;
-import ru.yandex.qatools.allure.events.StepFailureEvent;
-import ru.yandex.qatools.allure.events.StepFinishedEvent;
-import ru.yandex.qatools.allure.events.StepStartedEvent;
-import ru.yandex.qatools.allure.events.TestCaseCanceledEvent;
-import ru.yandex.qatools.allure.events.TestCaseFailureEvent;
-import ru.yandex.qatools.allure.events.TestCaseFinishedEvent;
-import ru.yandex.qatools.allure.events.TestCaseStartedEvent;
-import ru.yandex.qatools.allure.events.TestSuiteFinishedEvent;
-import ru.yandex.qatools.allure.events.TestSuiteStartedEvent;
+import ru.yandex.qatools.allure.events.*;
 import ru.yandex.qatools.allure.model.DescriptionType;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 import ru.yandex.qatools.allure.utils.AnnotationManager;
 
 public class AllureReporter implements Reporter, Formatter {
 
-    private static final String SCENARIO_OUTLINE_KEYWORD = "Scenario Outline";
+    private static final List<String> SCENARIO_OUTLINE_KEYWORDS = new ArrayList<>();
 
     private static final String FAILED = "failed";
     private static final String SKIPPED = "skipped";
@@ -77,6 +68,14 @@ public class AllureReporter implements Reporter, Formatter {
 
     //to avoid duplicate names of attachments and messages
     private long counter = 0;
+
+    public AllureReporter() {
+        List<I18n> i18nList = I18n.getAll();
+
+        for (I18n i18n : i18nList) {
+            SCENARIO_OUTLINE_KEYWORDS.addAll(i18n.keywords("scenario_outline"));
+        }
+    }
 
     @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
@@ -119,7 +118,7 @@ public class AllureReporter implements Reporter, Formatter {
     public void startOfScenarioLifeCycle(Scenario scenario) {
 
         //to avoid duplicate steps in case of Scenario Outline
-        if(SCENARIO_OUTLINE_KEYWORD.equals(scenario.getKeyword())){
+        if (SCENARIO_OUTLINE_KEYWORDS.contains(scenario.getKeyword())) {
             gherkinSteps.clear();
         }
 
@@ -132,20 +131,19 @@ public class AllureReporter implements Reporter, Formatter {
 
         SeverityLevel level = getSeverityLevel(scenario);
 
-        if(level != null){
+        if (level != null) {
             annotations.add(getSeverityAnnotation(level));
         }
 
         Issues issues = getIssuesAnnotation(scenario);
-        if(issues != null){
+        if (issues != null) {
             annotations.add(issues);
         }
 
         TestCaseId testCaseId = getTestCaseIdAnnotation(scenario);
-        if(testCaseId != null){
+        if (testCaseId != null) {
             annotations.add(testCaseId);
         }
-
 
 
         annotations.add(getFeaturesAnnotation(feature.getName()));
@@ -178,7 +176,7 @@ public class AllureReporter implements Reporter, Formatter {
     @Override
     public void endOfScenarioLifeCycle(Scenario scenario) {
 
-        while (gherkinSteps.peek() != null){
+        while (gherkinSteps.peek() != null) {
             fireCanceledStep(gherkinSteps.remove());
         }
 
@@ -213,11 +211,11 @@ public class AllureReporter implements Reporter, Formatter {
                 lifecycle.fire(new StepFailureEvent().withThrowable(result.getError()));
                 lifecycle.fire(new TestCaseFailureEvent().withThrowable(result.getError()));
                 currentStatus = FAILED;
-            } else if(SKIPPED.equals(result.getStatus())){
+            } else if (SKIPPED.equals(result.getStatus())) {
                 lifecycle.fire(new StepCanceledEvent());
                 if (PASSED.equals(currentStatus)) {
                     //not to change FAILED status to CANCELED in the report
-                    lifecycle.fire(new TestCaseCanceledEvent());
+                    lifecycle.fire(new TestCasePendingEvent());
                     currentStatus = SKIPPED;
                 }
             }
@@ -288,7 +286,7 @@ public class AllureReporter implements Reporter, Formatter {
                 SeverityLevel.TRIVIAL);
         for (Tag tag : scenario.getTags()) {
             Matcher matcher = severityPattern.matcher(tag.getName());
-            if(matcher.matches()){
+            if (matcher.matches()) {
                 SeverityLevel levelTmp;
                 String levelString = matcher.group(1);
                 try {
@@ -298,7 +296,7 @@ public class AllureReporter implements Reporter, Formatter {
                     levelTmp = SeverityLevel.NORMAL;
                 }
 
-                if(level == null || severityLevels.indexOf(levelTmp) < severityLevels.indexOf(level)){
+                if (level == null || severityLevels.indexOf(levelTmp) < severityLevels.indexOf(level)) {
                     level = levelTmp;
                 }
             }
@@ -311,20 +309,18 @@ public class AllureReporter implements Reporter, Formatter {
         lifecycle.fire(new StepStartedEvent(name).withTitle(name));
         lifecycle.fire(new StepCanceledEvent());
         lifecycle.fire(new StepFinishedEvent());
-        if (PASSED.equals(currentStatus)) {
-            //not to change FAILED status to CANCELED in the report
-            lifecycle.fire(new TestCaseCanceledEvent(){
-                @Override
-                protected String getMessage() {
-                    return "Unimplemented steps were found";
-                }
-            });
-            currentStatus = SKIPPED;
-        }
+        //not to change FAILED status to CANCELED in the report
+        lifecycle.fire(new TestCasePendingEvent() {
+            @Override
+            protected String getMessage() {
+                return "Unimplemented steps were found";
+            }
+        });
+        currentStatus = SKIPPED;
     }
 
-    private Description getDescriptionAnnotation(final String description){
-        return new Description(){
+    private Description getDescriptionAnnotation(final String description) {
+        return new Description() {
             @Override
             public String value() {
                 return description;
@@ -391,14 +387,14 @@ public class AllureReporter implements Reporter, Formatter {
         List<String> issues = new ArrayList<>();
         for (Tag tag : scenario.getTags()) {
             Matcher matcher = issuePattern.matcher(tag.getName());
-            if(matcher.matches()){
+            if (matcher.matches()) {
                 issues.add(matcher.group(1));
             }
         }
-        return issues.size() > 0 ? getIssuesAnnotation(issues): null;
+        return issues.size() > 0 ? getIssuesAnnotation(issues) : null;
     }
 
-    private Issues getIssuesAnnotation(List<String> issues){
+    private Issues getIssuesAnnotation(List<String> issues) {
         final Issue[] values = createIssuesArray(issues);
         return new Issues() {
             @Override
@@ -435,7 +431,7 @@ public class AllureReporter implements Reporter, Formatter {
     private TestCaseId getTestCaseIdAnnotation(Scenario scenario) {
         for (Tag tag : scenario.getTags()) {
             Matcher matcher = testCaseIdPattern.matcher(tag.getName());
-            if(matcher.matches()){
+            if (matcher.matches()) {
                 final String testCaseId = matcher.group(1);
                 return new TestCaseId() {
                     @Override
