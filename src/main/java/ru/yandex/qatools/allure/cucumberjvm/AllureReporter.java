@@ -53,11 +53,11 @@ public class AllureReporter implements Reporter, Formatter {
 
     private static final Log LOG = LogFactory.getLog(AllureReporter.class);
 
-    private final static Allure ALLURE_LIFECYCLE = Allure.LIFECYCLE;
+    private static final Allure ALLURE_LIFECYCLE = Allure.LIFECYCLE;
 
-    private final static Pattern SEVERITY_PATTERN = Pattern.compile("@SeverityLevel\\.(.+)");
-    private final static Pattern ISSUE_PATTERN = Pattern.compile("@Issue\\(\"+?([^\"]+)\"+?\\)");
-    private final static Pattern TEST_CASE_ID_PATTERN = Pattern.compile("@TestCaseId\\(\"+?([^\"]+)\"+?\\)");
+    private static final Pattern SEVERITY_PATTERN = Pattern.compile("@SeverityLevel\\.(.+)");
+    private static final Pattern ISSUE_PATTERN = Pattern.compile("@Issue\\(\"+?([^\"]+)\"+?\\)");
+    private static final Pattern TEST_CASE_ID_PATTERN = Pattern.compile("@TestCaseId\\(\"+?([^\"]+)\"+?\\)");
 
     private Feature feature;
     private StepDefinitionMatch match;
