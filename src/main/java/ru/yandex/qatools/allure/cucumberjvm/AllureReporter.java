@@ -293,7 +293,7 @@ public class AllureReporter implements Reporter, Formatter {
                 try {
                     levelTmp = SeverityLevel.fromValue(levelString.toLowerCase());
                 } catch (IllegalArgumentException e) {
-                    LOG.warn(String.format("Unexpected Severity level [%s]. SeverityLevel.NORMAL will be used instead", levelString));
+                    LOG.warn(String.format("Unexpected Severity level [%s]. SeverityLevel.NORMAL will be used instead", levelString), e);
                     levelTmp = SeverityLevel.NORMAL;
                 }
 
