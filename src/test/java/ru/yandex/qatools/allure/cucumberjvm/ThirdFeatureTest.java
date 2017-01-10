@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
  * @author Viktor Sidochenko viktor.sidochenko@gmail.com
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(features = {"src/test/resources/"}, tags = "@third")
+@CucumberOptions(features = {"src/test/resources/"}, tags = "@third,@failed")
 public class ThirdFeatureTest {
     
 }

@@ -160,12 +160,12 @@ public class AllureReporter implements Reporter, Formatter {
 
     @Override
     public void background(Background background) {
-
+        //Nothing to do with Allure
     }
 
     @Override
     public void scenario(Scenario scenario) {
-
+        //Nothing to do with Allure
     }
 
     @Override
@@ -185,12 +185,12 @@ public class AllureReporter implements Reporter, Formatter {
 
     @Override
     public void done() {
-
+        //Nothing to do with Allure
     }
 
     @Override
     public void close() {
-
+        //Nothing to do with Allure
     }
 
     @Override
@@ -201,7 +201,7 @@ public class AllureReporter implements Reporter, Formatter {
 
     @Override
     public void before(Match match, Result result) {
-
+        //Nothing to do with Allure
     }
 
     @Override
@@ -226,7 +226,7 @@ public class AllureReporter implements Reporter, Formatter {
 
     @Override
     public void after(Match match, Result result) {
-
+        //Nothing to do with Allure
     }
 
     @Override

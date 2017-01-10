@@ -136,14 +136,14 @@
                     </includes>
                     <testFailureIgnore>false</testFailureIgnore>
                     <argLine>
-                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar -Dcucumber.options="--junit,--allow-started-ignored"
+                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar -Dcucumber.options="--junit,--allow-started-ignored --plugin ru.yandex.qatools.allure.cucumberjvm.AllureReporter"
                     </argLine>
-                    <properties>
+<!--                    <properties>
                         <property>
                             <name>listener</name>
                             <value>ru.yandex.qatools.allure.cucumberjvm.AllureRunListener</value>
                         </property>
-                    </properties>
+                    </properties>-->
                 </configuration>
                 <dependencies>
                     <dependency>
