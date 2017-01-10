@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cucumber.runtime.CucumberException;
 import gherkin.I18n;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -79,12 +80,12 @@ public class AllureReporter implements Reporter, Formatter {
 
     @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
-
+        //Nothing to do with Allure
     }
 
     @Override
     public void uri(String uri) {
-
+        //Nothing to do with Allure
     }
 
     @Override
@@ -106,12 +107,12 @@ public class AllureReporter implements Reporter, Formatter {
 
     @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
-
+        //Nothing to do with Allure
     }
 
     @Override
     public void examples(Examples examples) {
-
+        //Nothing to do with Allure
     }
 
     @Override
@@ -268,7 +269,7 @@ public class AllureReporter implements Reporter, Formatter {
         } catch (ReflectiveOperationException e) {
             //shouldn't ever happen
             LOG.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new CucumberException(e);
         }
     }
 
@@ -391,7 +392,7 @@ public class AllureReporter implements Reporter, Formatter {
                 issues.add(matcher.group(1));
             }
         }
-        return issues.size() > 0 ? getIssuesAnnotation(issues) : null;
+        return !issues.isEmpty() ? getIssuesAnnotation(issues) : null;
     }
 
     private Issues getIssuesAnnotation(List<String> issues) {
