@@ -12,19 +12,16 @@ import cucumber.api.java.ru.То;
 import cucumber.api.java.ru.Тогда;
 import java.util.Random;
 
-/**
- * @author Viktor Sidochenko viktor.sidochenko@gmail.com
- */
 public class Steps {
 
-    String URL_First;
-    String URL_Second;
-    String URL_concat;
+    private String URL_First;
+    private String URL_Second;
+    private String URL_concat;
 
-    int a;
-    int b;
-    int c;
-    int sum;
+    private int a;
+    private int b;
+    private int c;
+    private int sum;
 
     @Дано("^первое число (\\d+)$")
     public void первое_число(int digit) throws Throwable {

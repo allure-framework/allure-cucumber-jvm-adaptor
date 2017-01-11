@@ -43,6 +43,9 @@ import ru.yandex.qatools.allure.model.DescriptionType;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 import ru.yandex.qatools.allure.utils.AnnotationManager;
 
+/**
+ * Allure reporting plugin for cucumber-jvm
+ */
 public class AllureReporter implements Reporter, Formatter {
 
     private static final List<String> SCENARIO_OUTLINE_KEYWORDS = new ArrayList<>();
