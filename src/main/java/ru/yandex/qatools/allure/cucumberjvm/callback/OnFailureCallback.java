@@ -1,6 +1,6 @@
 package ru.yandex.qatools.allure.cucumberjvm.callback;
 
-public interface OnFailureCallback<OnFailureSchedilerCallback, Object> {
+public interface OnFailureCallback<OnFailureCallback, Object> {
 
     /**
      * Callback call method
