@@ -222,13 +222,7 @@ public class AllureReporter implements Reporter, Formatter {
         if (match != null) {
             if (FAILED.equals(result.getStatus())) {
 
-                if (callback != null) {
-                    try {
-                        callbackResult = callback.newInstance().call();
-                    } catch (InstantiationException | IllegalAccessException ex) {
-                        throw new AllureException("Could not initialize callback", ex);
-                    }
-                }
+                this.excuteFailureCallback();
 
                 ALLURE_LIFECYCLE.fire(new StepFailureEvent().withThrowable(result.getError()));
                 ALLURE_LIFECYCLE.fire(new TestCaseFailureEvent().withThrowable(result.getError()));
@@ -492,5 +486,15 @@ public class AllureReporter implements Reporter, Formatter {
      */
     public static <T> T getFailureCallbackResult() {
         return (T) callbackResult;
+    }
+    
+    private void excuteFailureCallback() {
+        if (callback != null) {
+            try {
+                callbackResult = callback.newInstance().call();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new AllureException("Could not initialize callback", ex);
+            }
+        }
     }
 }
