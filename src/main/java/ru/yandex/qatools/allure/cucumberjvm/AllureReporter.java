@@ -71,7 +71,7 @@ public class AllureReporter implements Reporter, Formatter {
     private Feature feature;
     private StepDefinitionMatch match;
 
-    private LinkedList<Step> gherkinSteps = new LinkedList<>();
+    private final LinkedList<Step> gherkinSteps = new LinkedList<>();
 
     private String uid;
     private String currentStatus;
