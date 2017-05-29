@@ -5,7 +5,7 @@ import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = {"src/test/resources/"}, tags = "@first")
+@CucumberOptions(features = {"src/test/resources/"}, tags = "@table")
 public class FirstFeatureTest {
     
 }
