@@ -7,7 +7,6 @@ Feature: Text allure 3
     When whe run the scenario
     Then scenario name shuld be complete
 
-  @table
   Scenario: Data Table
     Given data table:
       | id | user    | password |
@@ -15,7 +14,6 @@ Feature: Text allure 3
       | 2  | goofy   | 12345    |
       | 3  | dolly   | 12345    |
 
-  @table
   Scenario: Data Table2
     Given data table:
       | id | user  | password |
