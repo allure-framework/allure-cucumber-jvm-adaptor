@@ -249,7 +249,7 @@ public class AllureReporter implements Reporter, Formatter {
      * @param result
      * @return Returns Throwable exception
      */
-    public Throwable getError(Result result){
+    protected Throwable getError(Result result){
         return result.getError();
     }
 
