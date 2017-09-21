@@ -226,8 +226,8 @@ public class AllureReporter implements Reporter, Formatter {
 
                 this.excuteFailureCallback();
 
-                ALLURE_LIFECYCLE.fire(new StepFailureEvent().withThrowable(result.getError()));
-                ALLURE_LIFECYCLE.fire(new TestCaseFailureEvent().withThrowable(result.getError()));
+                ALLURE_LIFECYCLE.fire(new StepFailureEvent().withThrowable(getError(result)));
+                ALLURE_LIFECYCLE.fire(new TestCaseFailureEvent().withThrowable(getError(result)));
                 currentStatus = FAILED;
             } else if (SKIPPED.equals(result.getStatus())) {
                 ALLURE_LIFECYCLE.fire(new StepCanceledEvent());
@@ -240,6 +240,10 @@ public class AllureReporter implements Reporter, Formatter {
             ALLURE_LIFECYCLE.fire(new StepFinishedEvent());
             match = null;
         }
+    }
+
+    public Throwable getError(Result result){
+        return result.getError();
     }
 
     @Override
