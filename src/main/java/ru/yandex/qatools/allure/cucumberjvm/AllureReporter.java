@@ -242,6 +242,13 @@ public class AllureReporter implements Reporter, Formatter {
         }
     }
 
+    /**
+     * Returns Throwable exception
+     * It can be overriden in extended Reporter
+     *
+     * @param result
+     * @return Returns Throwable exception
+     */
     public Throwable getError(Result result){
         return result.getError();
     }
